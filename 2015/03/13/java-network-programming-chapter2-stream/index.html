@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!--<![endif]-->
+
+<head>
+  <title>[Java网络编程]2. Stream | In The Light Shall We See Light</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="In The Light Shall We See Light">
+    <meta name="author" content="Xiaochen Wei">
+    <meta name="description" content="日拱一卒" />
+    <meta name="keywords" content="" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="In The Light Shall We See Light" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+	
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+    
+
+    <!-- Custom stylesheet, (add custom styles here, always load last) -->
+    <!-- Load our stylesheet for IE8 -->
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- Google Webfonts (Monserrat 400/700, Open Sans 400/600) -->
+    <link href='//fonts.useso.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.useso.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+
+    <!-- Load our fonts individually if IE8+, to avoid faux bold & italic rendering -->
+    <!--[if IE]>
+    <link href='http://fonts.useso.com/css?family=Montserrat:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+  
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Snapchat</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">Amazon</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/Life/" class="animsition-link">Life<small>(5)</small></a></li>
+				    
+				    <li><a href="/categories/Tech/" class="animsition-link">Tech<small>(11)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="http://go.kieran.top/" class="animsition-link">Kieran</a></li>
+                    
+                    <li><a href="http://domain.com/" class="animsition-link">Name</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">In The Light Shall We See Light</a></li>
+                            <li class="nolink"><span>Xiaochen </span>Wei</li>
+                            
+                            <li><a href="https://github.com/Sayary" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a></li>
+                            
+                            
+                            
+                            <li><a href="http://weibo.com/1753080294/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a></li>
+                            
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <!-- ============================ Hero Image =========================== -->
+
+<!--         <section id="hero" class="scrollme">
+            <div class="container-fluid element-img" style="background: url(/img/bg_img.jpg) no-repeat center center fixed;background-size: cover">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
+                        <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
+                            <div>
+                            	
+                                <h2>YOU'VE MADE A <span>BRAVE</span> DECISION, WELCOME.</h2>
+                                <p></p>
+				    			
+                                <h2></h2>
+                                <p>每一个不曾起舞的日子都是对生命的辜负。</p>
+				    			
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="herofade beige-dk"></div>
+            </div>
+        </section> -->
+
+        <!-- Height spacing helper -->
+<!--         <div class="heightblock"></div> -->
+        <!-- // End height spacing helper -->
+
+        <!-- ============================ END Hero Image =========================== -->
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2015-03-13T00:15:16.000Z" itemprop="datePublished">
+          2015-03-13
+      </time>
+    
+    
+    | 
+    <a href='/tags/Java/'>Java</a>
+    
+    
+</span>
+                <h1>[Java网络编程]2. Stream</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>Java中的I/O是通过stream的形式实现的，普通的包括InputStream和OutputStream, 比较特殊的还有FilterStream.</p>
+<p>Stream是线程同步的，通俗的说就是</p>
+<blockquote>
+<p>when a program (really a thread) asks a stream to read or write a piece of data, it waits for the data to be read or written before it does anything else.</p>
+</blockquote>
+<p>当然Java同样也提供nonblocking I/O，是通过channels和buffers实现的。</p>
+<h3 id="1-_Output_Streams">1. Output Streams</h3><p>java中output stream是作为抽象类定义的，主要实现了以下5个方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> b)</span> <span class="keyword">throws</span> IOException</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">byte</span>[] data)</span> <span class="keyword">throws</span> IOException </span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">byte</span>[] data, <span class="keyword">int</span> offset, <span class="keyword">int</span> length)</span> <span class="keyword">throws</span> IOException</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">flush</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span></span><br></pre></td></tr></table></figure>
+<p>对于任意一种继承了superclass的outputstream,我们只要使用这些方法就可以完成输出操作，无论是fileoutputstream还是telnetoutputstream等等。</p>
+<p>尽管<strong>write(int b)</strong>传入的参数为int型，它世界上写入的是一个unsigned byte.</p>
+<blockquote>
+<p>Java doesn’t have an unsigned byte data type, so an int has to be used here instead.</p>
+</blockquote>
+<p>每一次只输出一个byte无疑是低效的，这在TCP协议中尤其明显，因为这样报头等信息占据了传输的大部分内容。一种很明显解决办法是缓存起来一起发送。<strong>write(byte[] data)和write(byte[] data, int offset, int length)</strong>就是用来做这个事情的。缓存的方法可以使用BufferedOutput Stream或者BufferedWriter。</p>
+<p>使用buffer可能会出现一个问题，即如果只有buffer满的时候才会发送数据的话，在buffer不满的情况下，我们的request发不出去，因而无法得到response，这样可能会导致死锁的发生。<strong>flush()</strong>方法就是为了解决这一问题而实现的。</p>
+<blockquote>
+<p>The flush() method breaks the deadlock by forcing the buffered stream to send its data even if the buffer isn’t yet full.</p>
+<p>As a corollary to all this, you should flush all streams immediately before you close them. Otherwise, data left in the buffer when the stream is closed may get lost.</p>
+</blockquote>
+<p>最后，当我们使用完毕stream后，可以调用close()方法关闭stream. 如果Stream不能正常关闭的话可能会导致一系列问题，比如端口和文件的持续占用等等，因此很多习惯于使用<strong>finally block</strong>来关闭stream.</p>
+<p>这样做除了比较繁琐以外，有两个需要注意的地方：</p>
+<ol>
+<li>outputstream的声明要在try语句以外，提前声明为null</li>
+<li>在finally中关闭stream的时候，要check一下stream是否为null，如果为Null就不用关闭了。</li>
+</ol>
+<p>总而言之就是烦，这种写法的样子大概是这样的:</p>
+<p><img src="http://weixc1234.qiniudn.com/毕业照片.png" alt="2-3"></p>
+<p>这种写法在设计模式中叫做<strong>dispose pattern</strong>，个人觉得比较蛋疼。</p>
+<p>还好Java 7出来之后支持了<strong>try with resources</strong>，现在我们可以这样写了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">try</span>(OutputStream out = <span class="keyword">new</span> FileOutputStream(<span class="string">"/tmp/data.txt"</span>)) &#123;</span><br><span class="line">    <span class="comment">// work with the output stream...</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">    System.out.println(ex.getMessage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样相当于我们把所有可能出现的exception可能都包进了一个try里，棒棒的。</p>
+<h3 id="2-_Input_Streams">2. Input Streams</h3><p>InputStream在Java里也同样是以抽象类的形式定义的，主要提供的基本方法如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span>[] input)</span> <span class="keyword">throws</span> IOException</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span>[] input, <span class="keyword">int</span> offset, <span class="keyword">int</span> length)</span> <span class="keyword">throws</span> IOException </span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">skip</span><span class="params">(<span class="keyword">long</span> n)</span> <span class="keyword">throws</span> IOException</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">available</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException</span></span><br></pre></td></tr></table></figure>
+<p>其实大部分的方法与output stream的用法有类似之处，在两个重载的read()函数中，有一个需要注意的地方是：</p>
+<p>假设我的buffer长度为1024，在网络通信中可能由于各种原因当前时刻我只收到了500的数据，此时read不会等待所有数据都到达才开始读取，而是buffer里面有多少读多少，直到buffer为空为止。</p>
+<p>当stream中所有的数据都到达且读取完毕时，我们再读取buffer中的内容，此时会返回-1，这时才是应当调用close关闭stream的时候。那么我想只读取里面有的data但是不关闭stream应该怎么办呢，我又不想让他返回-1.这就是available()函数的作用了，该函数可以返回我们仍然需要读取的data的数量，当这个函数返回0时，我们关闭stream即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> byteAvailable = in.available();</span><br><span class="line"><span class="keyword">byte</span>[] input = <span class="keyword">new</span> <span class="keyword">byte</span>[byteAvailable];</span><br><span class="line"><span class="keyword">int</span> byteRead = in.read(input, <span class="number">0</span>, bytesAvailable);</span><br><span class="line"><span class="comment">// continue with rest of program immediately...</span></span><br></pre></td></tr></table></figure>
+<p>有时候我们希望跳过一些data不读，这时可以调用skip()函数，在读取文件的时候这个函数比较好实现，因为文件在OS中是random access的，我们只需要改一下pointer即可，但是在网络中数据都是连续的。</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <div class="pagination" role="pagination">
+    
+    <a class="pull-left" href="/2015/03/14/java-network-programming-chapter3-thread/" style="float: left;">
+        ← [Java网络编程]3. Threads
+    </a>
+    
+    
+    <a class="pull-right" href="/2015/01/16/Scalability-Fundamentals/">
+    [系统设计笔记] 2. Scalability Fundamentals
+    </a>
+    
+</div>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2015/03/13/java-network-programming-chapter2-stream/" data-title="[Java网络编程]2. Stream" data-url="http://yoursite.com/2015/03/13/java-network-programming-chapter2-stream/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"alfredwei"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0] 
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By Xiaochen Wei. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/Sayary" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    <li><a href="http://weibo.com/1753080294/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a>&nbsp;</li>
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+        
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+    
+    resizeHero();
+    
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/jquery.flexslider-min.js"></script><!-- Flexslider plugin -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+<!-- Initiate flexslider plugin -->
+<script type="text/javascript">
+    $(document).ready(function($) {
+      $('.flexslider').flexslider({
+        animation: "fade",
+        prevText: "",
+        nextText: "",
+        directionNav: true
+      });
+    });
+</script>
+
+</body>
+</html>

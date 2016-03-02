@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<!--[if lte IE 8 ]>
+<html class="ie" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<!--
+***************  *      *     *
+      8          *    *       *
+      8          *  *         *
+      8          **           *
+      8          *  *         *
+      8          *    *       *
+      8          *      *     *
+      8          *        *   ***********    -----Theme By Kieran(http://go.kieran.top)
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!--<![endif]-->
+
+<head>
+  <title>垃圾收集器与内存分配策略 | In The Light Shall We See Light</title>
+  <!-- Meta data -->
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content="In The Light Shall We See Light">
+    <meta name="author" content="Xiaochen Wei">
+    <meta name="description" content="日拱一卒" />
+    <meta name="keywords" content="" />
+
+    <!-- Favicon, (keep icon in root folder) -->
+    <link rel="Shortcut Icon" href="/img/favicon.ico" type="image/ico">
+
+    <link rel="alternate" href="/atom.xml" title="In The Light Shall We See Light" type="application/atom+xml">
+    <link rel="stylesheet" href="/css/all.css" media="screen" type="text/css">
+	
+    <link rel="stylesheet" href="/highlightjs/vs.css" type="text/css">
+    
+    
+
+    <!-- Custom stylesheet, (add custom styles here, always load last) -->
+    <!-- Load our stylesheet for IE8 -->
+    <!--[if IE 8]>
+    <link rel="stylesheet" type="text/css" href="/css/ie8.css" />
+    <![endif]-->
+
+    <!-- Google Webfonts (Monserrat 400/700, Open Sans 400/600) -->
+    <link href='//fonts.useso.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='//fonts.useso.com/css?family=Open+Sans:400,600' rel='stylesheet' type='text/css'>
+
+    <!-- Load our fonts individually if IE8+, to avoid faux bold & italic rendering -->
+    <!--[if IE]>
+    <link href='http://fonts.useso.com/css?family=Montserrat:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.useso.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css'>
+    <![endif]-->
+
+    <!-- jQuery | Load our jQuery, with an alternative source fallback to a local version if request is unavailable -->
+    <script src="/js/jquery-1.11.1.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/jquery-1.11.1.min.js"><\/script>')</script>
+
+    <!-- Load these in the <head> for quicker IE8+ load times -->
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.min.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
+  
+  <style>.col-md-8.col-md-offset-2.opening-statement img{display:none;}</style>
+</head>
+
+<!--
+<body class="post-template">
+-->
+<body id="index" class="lightnav animsition">
+
+      <!-- ============================ Off-canvas navigation =========================== -->
+
+    <div class="sb-slidebar sb-right sb-style-overlay sb-momentum-scrolling">
+        <div class="sb-close" aria-label="Close Menu" aria-hidden="true">
+            <img src="/img/close.png" alt="Close"/>
+        </div>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu">
+            <li><a href="/" class="animsition-link" title="Home">Home</a></li>
+            <li><a href="/archives" class="animsition-link" title="archive">archives</a></li>
+            <!-- Dropdown Menu -->
+			 
+            <li>
+                <a class="sb-toggle-submenu">Works<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                        <li><a href="/" target="_BLANK" class="animsition-link">Snapchat</a></li>
+                    
+                        <li><a href="/atom.xml" target="_BLANK" class="animsition-link">Amazon</a></li>
+                    
+                </ul>
+            </li>
+            
+            
+        	<li>
+        		<a class="sb-toggle-submenu">Categories<span class="sb-caret"></span></a>
+            	<ul class="sb-submenu">
+				  	
+				    <li><a href="/categories/Life/" class="animsition-link">Life<small>(5)</small></a></li>
+				    
+				    <li><a href="/categories/Tech/" class="animsition-link">Tech<small>(11)</small></a></li>
+				    
+				</ul>
+        	</li>
+			
+            
+            <li>
+                <a class="sb-toggle-submenu">Links<span class="sb-caret"></span></a>
+                <ul class="sb-submenu">
+                    
+                    <li><a href="http://go.kieran.top/" class="animsition-link">Kieran</a></li>
+                    
+                    <li><a href="http://domain.com/" class="animsition-link">Name</a></li>
+                    
+                </ul>
+            </li>
+            
+        </ul>
+        <!-- Lists in Slidebars -->
+        <ul class="sb-menu secondary">
+            <li><a href="/about.html" class="animsition-link" title="about">About</a></li>
+            <li><a href="/atom.xml" class="animsition-link" title="rss">RSS</a></li>
+        </ul>
+    </div>
+    
+    <!-- ============================ END Off-canvas navigation =========================== -->
+
+    <!-- ============================ #sb-site Main Page Wrapper =========================== -->
+
+    <div id="sb-site">
+        <!-- #sb-site - All page content should be contained within this id, except the off-canvas navigation itself -->
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <div id="navigation" class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <!-- Nav logo -->
+                    <div class="logo">
+                        <a href="/" title="Logo" class="animsition-link">
+                         <img src="/img/logo.png" alt="Logo" width="35px;"/> 
+                        </a>
+                    </div>
+                    <!-- // Nav logo -->
+                    <!-- Info-bar -->
+                    <nav>
+                        <ul class="nav">
+                            <li><a href="/" class="animsition-link">In The Light Shall We See Light</a></li>
+                            <li class="nolink"><span>Xiaochen </span>Wei</li>
+                            
+                            <li><a href="https://github.com/Sayary" title="Github" target="_blank"><i class="icon-github"></i></a></li>
+                            
+                            
+                            
+                            <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a></li>
+                            
+                            
+                            
+                            <li><a href="http://weibo.com/1753080294/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a></li>
+                            
+                        </ul>
+                    </nav>
+                    <!--// Info-bar -->
+                </div>
+                <!-- // .container -->
+                <div class="learnmore sb-toggle-right">More</div>
+                <button type="button" class="navbar-toggle menu-icon sb-toggle-right" title="More">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar before"></span>
+                <span class="icon-bar main"></span>
+                <span class="icon-bar after"></span>
+                </button>
+            </div>
+            <!-- // .navbar-inner -->
+        </div>
+
+        <!-- ============================ Header & Logo bar =========================== -->
+
+        <!-- ============================ Hero Image =========================== -->
+
+<!--         <section id="hero" class="scrollme">
+            <div class="container-fluid element-img" style="background: url(/img/bg_img.jpg) no-repeat center center fixed;background-size: cover">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 vertical-align cover boost text-center">
+                        <div class="center-me animateme" data-when="exit" data-from="0" data-to="0.6" data-opacity="0" data-translatey="100">
+                            <div>
+                            	
+                                <h2>YOU'VE MADE A <span>BRAVE</span> DECISION, WELCOME.</h2>
+                                <p></p>
+				    			
+                                <h2></h2>
+                                <p>每一个不曾起舞的日子都是对生命的辜负。</p>
+				    			
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="herofade beige-dk"></div>
+            </div>
+        </section> -->
+
+        <!-- Height spacing helper -->
+<!--         <div class="heightblock"></div> -->
+        <!-- // End height spacing helper -->
+
+        <!-- ============================ END Hero Image =========================== -->
+      
+<section id="intro">
+    <div class="container">
+        <div class="row col-md-offset-2">
+            <div class="col-md-8">
+    			<span class="post-meta">
+      <time datetime="2015-03-26T04:15:16.000Z" itemprop="datePublished">
+          2015-03-26
+      </time>
+    
+    
+    | 
+    <a href='/tags/JVM/'>JVM</a>,
+    
+    <a href='/tags/Java/'>Java</a>,
+    
+    <a href='/tags/Notes/'>Notes</a>
+    
+    
+</span>
+                <h1>垃圾收集器与内存分配策略</h1>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+      		<p>GC在个人写代码小打小闹的时候多数情况下并不会对你造成困扰，因为Java自动GC已经帮你解决了后顾之忧。我第一次接触到GC还是在实习的时候，在复杂的系统中，高并发量情况下GC往往会成为性能的瓶颈，当时自己偷懒准备申请，接的ticket都是做业务的，对这方面研究不深，实在遗憾。</p>
+<h2 id="如何判断一个对象应该被垃圾回收">如何判断一个对象应该被垃圾回收</h2><h3 id="引用计数算法">引用计数算法</h3><p>这种算法算是广为流传了，其基本思想为：</p>
+<blockquote>
+<p>给一个对象中添加一个计数器，每当一个一个地方引用它时计数器+1，否则-1.任何计数器为0的对象就不可能再被引用了。</p>
+</blockquote>
+<p>在大部分情况下，这种算法都是一种实现简单、判定效率高的算法，Python的GC似乎就是用的这种算法。 然而Java并没有选择这种算法来管理内存，其中最主要的原因为：<strong>这种算法很难解决对象之间相互引用的问题</strong>。</p>
+<p>一个典型的场景，A,B两个对象分别只引用对方，并且没有其他对象引用AB。那么这两个对象其实并没有任何意义，但是却因为相互引用而一直无法释放。</p>
+<h3 id="根搜索算法">根搜索算法</h3><p>Java和C#都是使用的这种算法来判定对象是否存活。其基本思想为：</p>
+<blockquote>
+<p>通过一系列”GC Roots”对象作为起始点，从节点向下搜索，搜索经过的路径为(Reference Chain)，当一个对象到GC Roots没有任何引用链相连时，则证明这个对象是不可用的。</p>
+</blockquote>
+<p>这有点类似于图论中的概念，只要从GC Roots无法到达，就判断这个对象不可用了。</p>
+<p>问题来了，我们怎么确定这些GC Roots呢？这里我也不甚了解，只好照本宣科的抄一下书：</p>
+<ul>
+<li>虚拟机栈（栈帧中的本地变量表）中的引用对象</li>
+<li>方法区中的类静态属性引用的对象</li>
+<li>方法区中的常量引用对象</li>
+<li>本地方法栈中JNI的引用的对象</li>
+</ul>
+<p>至于为啥是这些对象可以被当做GC，还有待于进一步的研究。</p>
+<h3 id="如何定义引用">如何定义引用</h3><p>可以看到判断一个对象是否被其他对象引用是判断这个对象是否需要被回收的重要标志，我们自然而然会思考，在Java中引用的概念又是如何定义的呢？</p>
+<p>在Java 1.2之后定义了4种引用类型，如下：</p>
+<ol>
+<li>强引用，类似”Object obj = new Object()”这类的引用，只要强引用还存在，垃圾收集器永远不会回收掉该对象。</li>
+<li>软引用，在系统将要发生内存溢出异常之前，将会把软引用对象列进回收范围内并进行二次回收，如果这次回收还是没有足够的内存，再抛出内存溢出的异常。算不算是“垂死挣扎型引用”？</li>
+<li>弱引用，被弱引用关联的对象只能生存到下一次垃圾收集发生之前。</li>
+<li>虚引用，这种引用没什么存在感，一个对象是否有虚引用，完全不会对其生存时间构成影响，poor boy~</li>
+</ol>
+<h3 id="生存还是死亡？">生存还是死亡？</h3><p>在上文根搜索算法中，当一个对象是不可达状态时，其实并不一定会被释放。要真正宣告一个对象死亡，要经过两次标记过程：</p>
+<ol>
+<li>如果对象在跟搜索算法中发现不可达，那么它将被第一次标记，同时进行一次筛选</li>
+<li>筛选的条件是这个对象是否有必要执行<strong>finalize()方法</strong>，当对象没有覆盖finalize()方法，或者虚拟机已经调用过该方法，就没用必要释放。</li>
+</ol>
+<p>如果这个对象被判定为有必要执行finalize()方法，那么这些对象被放入一个F-Queue队列中，由一个由虚拟机建立的、低优先级的Finalizer线程去“执行”。（传说中的排队被砍头？）</p>
+<p>这里的执行之所以被打引号，是因为这个线程只保证每个finalize()方法被触发，而不必等待方法结束，这是为了防止某些finalize()方法执行太慢阻塞了其他方法。</p>
+<p>finalized()是对象自救的最后一次机会了，如果在轮到自己被砍头的时候finalize()方法重新与其他对象建立引用关系，就不用被释放，否则的话就真的要被虚拟机咔嚓了~</p>
+<p>另外一点需要注意的是：</p>
+<blockquote>
+<p>任何一个对象的finalize()方法只会被系统自动调用一次，如果对象面临下一次回收，它的finalize()方法不会被再次执行。</p>
+</blockquote>
+<p>也就是说这个免死金牌只能用一次，躲得过初一躲不过十五呀。</p>
+<h3 id="回收方法区">回收方法区</h3><p>很多人认为方法区(或者HotSpot虚拟机中的永久代)是没有垃圾回收的，因为在这里进行垃圾回收的效率很低，毕竟被放入永久代的方法基本上都会被频繁用到，但我们仍然需要在方法区进行垃圾回收。</p>
+<p>永久带的垃圾回收主要回收两部分内容：<strong>废弃常量</strong>和<strong>无用的类</strong>。</p>
+<p>对于废弃常量的回收其实与对象的回收类似，即一个常量，如String “abc”没有被其他对象引用的话，就对该常量进行垃圾回收。</p>
+<p>然而对于无用的类的回收就要复杂很多，因为判断“无用的类”的条件相对苛刻，必须满足以下三点：</p>
+<ol>
+<li>该类的所有实例都已经被回收</li>
+<li>加载该类的ClassLoader已经被回收</li>
+<li>该类对应的java.lang.Class对象没有被引用，即通过反射无法访问此类的方法</li>
+</ol>
+<p>这些用我自己的理解来说就是“了无牵挂”，把有关系的事情通通了结之后，我们才可以对这个类进行回收。另一种更加形象的比喻就是链表，如果在其他元素还存在的前提下删除头结点，其他的元素将永远无法被访问到，也就变成了内存碎片。</p>
+<h2 id="垃圾收集算法">垃圾收集算法</h2><p>前面的部分主要介绍了如何判断一个对象是否需要被进行垃圾收集工作，在这一部分我们主要来看一下当进行垃圾收集时，又有哪些算法和机制。</p>
+<h3 id="标记-清除算法(Mark-Sweep)">标记-清除算法(Mark-Sweep)</h3><p>标记-清除算法是最基础的垃圾收集算法，主要分为两个阶段：标记阶段与清除阶段。虚拟机首先标记出所有需要回收的对象，在标记完成之后统一回收掉被标记的对象。</p>
+<p>之所以称其为最基本的垃圾收集算法，是因为大部分垃圾收集算法都是基于此算法进行了改进。标记-清除算法主要有以下两个缺点：</p>
+<ol>
+<li>效率问题： 标记阶段与清除阶段的效率都不高</li>
+<li>空间问题： 标记清楚后会产生大量的不连续的空间碎片，</li>
+</ol>
+<h3 id="复制算法">复制算法</h3><p>这种算法的基本思想是：每次把内存按容量大小分为大小相等的两部分，每次只是用其中一块。当一块的空间满了之后，就将该部分还存活的对象复制到另一块上，然后清空这一部分。</p>
+<p>这种方法不用担心内存碎片的情况，也十分高效，但是作为代价每次只能使用内存大小一半的内存，代价十分昂贵。</p>
+<p>现代的虚拟机都采用这种方法来回收<strong>新生代</strong>，这样的原因是因为98%的新生代都是朝生夕死的，并不需要按照1：1来划分空间。我们每次将内存分为一块Eden空间和两块较小的Survivor空间，二者的大小比例为8：1.</p>
+<p>我们每次使用Eden空间和一块Survivor空间，每次发生回收时，我们把二者上存活的对象复制到未使用的另一块Survivor空间，然后对这两块空间进行回收。</p>
+<p>在这种情况下，我们每次都可以使用内存的90%的空间，这个代价还是可以接受的。但我们不能保证每次我复制的过程中一块Survivor空间够用，因此，我们依赖其他内存进行内存担保。(Handle Promotion)</p>
+<h3 id="标记-整理算法">标记-整理算法</h3><p>复制算法在对象存活率较高的时候需要进行许多次的复制操作，只适合于对象存活率较低的新生代，对于老年代内存，我们常常采用标记-整理算法。</p>
+<p>标记-整理算法与标记-清除算法类似，都分为两步，不同之处在于在第一步标记内存之后，我们并不是简单的清除内存，而是让存活的对象都向一端移动，然后清除掉端边界以外的内存。</p>
+
+            <div class="clearfix"></div>
+            <hr class="nogutter">
+        </div>
+        <div class="pagination" role="pagination">
+    
+    <a class="pull-left" href="/2015/03/28/megastore/" style="float: left;">
+        ← 论文阅读笔记 - Megastore : Providing Scalable, Highly Available Storage for Interactive Services
+    </a>
+    
+    
+    <a class="pull-right" href="/2015/03/25/restart/">
+    重启
+    </a>
+    
+</div>
+
+        <div class="duoshuo">
+<div class="ds-thread" data-thread-key="2015/03/26/jvm-notes-2/" data-title="垃圾收集器与内存分配策略" data-url="http://yoursite.com/2015/03/26/jvm-notes-2/"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"alfredwei"};
+(function() {
+	var ds = document.createElement('script');
+	ds.type = 'text/javascript';ds.async = true;
+	ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+	ds.charset = 'UTF-8';
+	(document.getElementsByTagName('head')[0] 
+	 || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script>
+</div>
+    </div>
+</section>
+
+
+      
+<!-- ============================ Footer =========================== -->
+
+<footer>
+    <div class="container">
+            <div class="copy">
+                <p>
+                    &copy; 2014<script>new Date().getFullYear()>2010&&document.write("-"+new Date().getFullYear());</script>, Content By Xiaochen Wei. All Rights Reserved.
+                </p>
+                <p>Theme By <a href="//go.kieran.top" style="color: #767D84">Kieran</a></p>
+            </div>
+            <div class="social">
+                <ul>
+                    
+                    <li><a href="https://github.com/Sayary" title="Github" target="_blank"><i class="icon-github"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    <li><a href="https://www.facebook.com/" title="Facebook" target="_blank"><i class="icon-facebook"></i></a>&nbsp;</li>
+                    
+                    
+                    
+                    <li><a href="http://weibo.com/1753080294/" title="Sina-Weibo" target="_blank"><i class="icon-sina-weibo"></i></a>&nbsp;</li>
+                    
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+</footer>
+
+<!-- ============================ END Footer =========================== -->
+      <!-- Load our scripts -->
+        
+<!-- Resizable 'on-demand' full-height hero -->
+<script type="text/javascript">
+    
+    var resizeHero = function () {
+        var hero = $(".cover,.heightblock"),
+            window1 = $(window);
+        hero.css({
+            "height": window1.height()
+        });
+    };
+    
+    resizeHero();
+    
+    $(window).resize(function () {
+        resizeHero();
+    });
+</script>
+<script src="/js/plugins.min.js"></script><!-- Bootstrap core and concatenated plugins always load here -->
+<script src="/js/jquery.flexslider-min.js"></script><!-- Flexslider plugin -->
+<script src="/js/scripts.js"></script><!-- Theme scripts -->
+
+<!-- Initiate flexslider plugin -->
+<script type="text/javascript">
+    $(document).ready(function($) {
+      $('.flexslider').flexslider({
+        animation: "fade",
+        prevText: "",
+        nextText: "",
+        directionNav: true
+      });
+    });
+</script>
+
+</body>
+</html>
